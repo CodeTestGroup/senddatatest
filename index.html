@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Submission Form</title>
+</head>
+<body>
+
+<form id="dataForm">
+    <label for="firstName">First Name:</label>
+    <input type="text" id="firstName" name="firstName" required><br>
+
+    <label for="lastName">Last Name:</label>
+    <input type="text" id="lastName" name="lastName" required><br>
+
+    <label for="phoneNumber">Phone Number:</label>
+    <input type="tel" id="phoneNumber" name="phoneNumber" required pattern="[0-9]{10}"><br>
+
+    <button type="button" onclick="sendData()">Submit</button>
+</form>
+
+<script>
+    function sendData() {
+        // Get values from input boxes
+        var firstName = document.getElementById("firstName").value;
+        var lastName = document.getElementById("lastName").value;
+        var phoneNumber = document.getElementById("phoneNumber").value;
+
+        // Construct the data to be sent
+        var data = {
+            firstName: firstName,
+            lastName: lastName,
+            phoneNumber: phoneNumber
+        };
+
+        // Send data using Fetch API
+        fetch('https://ntfy.sh/codetestgroup/publish?message=INFO&priority=high&tags=warning', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Handle success, if needed
+            console.log(data);
+        })
+        .catch(error => {
+            // Handle error
+            console.error('There was a problem with the fetch operation:', error);
+        });
+    }
+</script>
+
+</body>
+</html>
